@@ -1,0 +1,38 @@
+server:
+  port: 8081
+
+github:
+  client:
+    clientId: e05ebe5f75d09405cdea #github上有
+    clientSecret: 5e569beb7b4363dec33c3c0672c7b9d382c58084
+    userAuthorizationUri: https://github.com/login/oauth/authorize #是登陆之后询问的地址，只是第一次会有
+    accessTokenUri: https://github.com/login/oauth/access_token #获取token的地址
+    authenticationScheme: query #是指请求参数以什么样的方式跟随，有query（跟在url参数后面），form（以form的body形式提交），header（放到Http header里），none（没有，我也不知道这个是什么意思）
+    clientAuthenticationScheme: form
+    #下面三个是测试回调地址的，默认是将当前url地址作为redirect_uri，
+    #因为有些服务器是允许多个回调地址的，这个具体看服务器自己怎么设定。
+    #这些参数都可以在对应ResourceServerProperties和AuthorizationCodeResourceDetails的源码找到
+    pre-established-redirect-uri: http://localhost:8089/login/github
+    registered-redirect-uri: http://localhost:8089/login/github
+    use-current-uri: false
+  resource:
+    userInfoUri: https://api.github.com/user
+
+security:
+  basic:
+    enabled: false
+
+#security:
+#  oauth2:
+#    client:
+#      clientId: e05ebe5f75d09405cdea
+#      clientSecret: 5e569beb7b4363dec33c3c0672c7b9d382c58084
+#      userAuthorizationUri: https://github.com/login/oauth/authorize
+#      accessTokenUri: https://github.com/login/oauth/access_token
+#      authentication-scheme: query
+#      clientAuthenticationScheme: form
+#      pre-established-redirect-uri: http://localhost:8088/login/github
+#      registered-redirect-uri: http://localhost:8088/login/github
+#      use-current-uri: false
+#    resource:
+#      user-info-uri: https://api.github.com/user

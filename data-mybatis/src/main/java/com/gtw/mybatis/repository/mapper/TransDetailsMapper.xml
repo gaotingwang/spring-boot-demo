@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gtw.mybatis.repository.mapper.TransDetailsMapper">
+    <!--插入音频转码详情-->
+    <insert id="addAudioTrans" parameterType="com.gtw.mybatis.domain.Trans">
+        <foreach collection="audios" item="audio" separator=";">
+            INSERT INTO trans_details (rawKey, transKey, quality)
+            VALUES (#{rawKey}, #{audio.key}, #{audio.quality, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler});
+        </foreach>
+    </insert>
+    <!--插入视频转码详情-->
+    <insert id="addVideoTrans" parameterType="com.gtw.mybatis.domain.Trans">
+        <foreach collection="videos" item="video" separator=";">
+            INSERT INTO trans_details (rawKey, transKey, clarity)
+            VALUES
+            (#{rawKey},
+            #{video.key},
+            #{video.quality, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler});
+        </foreach>
+    </insert>
+</mapper>

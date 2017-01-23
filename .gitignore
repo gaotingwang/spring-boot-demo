@@ -1,0 +1,8 @@
+.mvn/
+*.iml
+mvnw*
+target/
+.idea/
+.DS_Store/
+.DS_Store
+docker/app.jar

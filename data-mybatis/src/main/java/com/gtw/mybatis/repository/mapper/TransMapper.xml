@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gtw.mybatis.repository.mapper.TransMapper">
+    <!--
+    <resultMap id="AudioMap" type="com.gtw.mybatis.domain.AudioTrans">
+        <collection property="audios" ofType="com.gtw.mybatis.domain.Audio">
+            <constructor>
+                <idArg column="transKey" javaType="String"/>
+                <arg column="quality" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.gtw.mybatis.domain.Audio$Quality" />
+            </constructor>
+        </collection>
+    </resultMap>
+    -->
+
+    <!--org.apache.ibatis.type.EnumOrdinalTypeHandler是根据Enum的序号来进行映射-->
+    <resultMap id="TransMap" type="com.gtw.mybatis.domain.Trans">
+        <result property="message" column="message"/>
+        <result property="state" column="state" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <discriminator column="type" javaType="Integer">
+            <case value="null" resultType="com.gtw.mybatis.domain.Trans">
+                <constructor>
+                    <idArg column="rawKey" javaType="String"/>
+                    <arg column="type" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.gtw.mybatis.domain.Trans$Type"/>
+                </constructor>
+            </case>
+            <case value="0" resultType="com.gtw.mybatis.domain.AudioTrans">
+                <constructor>
+                    <idArg column="rawKey" javaType="String"/>
+                </constructor>
+                <collection property="audios" ofType="com.gtw.mybatis.domain.Audio">
+                    <constructor>
+                        <idArg column="transKey" javaType="String"/>
+                        <arg column="quality" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.gtw.mybatis.domain.Audio$Quality" />
+                    </constructor>
+                </collection>
+            </case>
+            <case value="1" resultType="com.gtw.mybatis.domain.VideoTrans">
+                <constructor>
+                    <idArg column="rawKey" javaType="String"/>
+                    <arg column="coverKey" javaType="String"/>
+                </constructor>
+                <collection property="videos" ofType="com.gtw.mybatis.domain.Video">
+                    <constructor>
+                        <idArg column="transKey" javaType="String"/>
+                        <arg column="clarity" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.gtw.mybatis.domain.Video$Quality"/>
+                    </constructor>
+                </collection>
+            </case>
+        </discriminator>
+    </resultMap>
+    <!--根据文件key查询转码信息-->
+    <select id="query" resultMap="TransMap">
+        SELECT t.rawKey, message, type, state, coverKey, transKey, clarity, quality
+        FROM trans t
+        LEFT JOIN trans_details td ON t.rawKey = td.rawKey
+        where t.rawKey = #{key};
+    </select>
+    <!--插入转码信息-->
+    <insert id="add" parameterType="com.gtw.mybatis.domain.Trans">
+        INSERT INTO trans (rawKey, message, type, state)
+        VALUES (#{rawKey}, #{message}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{state, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler});
+    </insert>
+    <!--更新指定文件的快照key-->
+    <update id="update">
+        UPDATE trans SET coverKey = #{coverKey} WHERE rawKey = #{rawKey};
+    </update>
+    <delete id="delete">
+        DELETE FROM trans WHERE rawKey = #{key}
+    </delete>
+</mapper>
