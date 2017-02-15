@@ -13,13 +13,11 @@ import java.util.List;
 @Service
 public class CacheUserServiceImpl implements ICacheUserService {
 
-    //@CachePut(value = "user", key = "'id_'+#user.getId()")
     /*@Caching(put = {
             @CachePut(value = "user", key = "'user_id_'+#user.id"),
             @CachePut(value = "user", key = "'user_username_'+#user.username"),
             @CachePut(value = "user", key = "'user_email_'+#user.email")
     })*/
-
     /**
      * 使用CachePut每次都会执行方法体，并将结果写入到缓存中
      * 1.会生成user~key(zset类型)的key的值，其内保存value = "user"的所有key值

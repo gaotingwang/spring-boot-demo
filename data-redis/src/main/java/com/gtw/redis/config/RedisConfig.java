@@ -23,8 +23,8 @@ import java.lang.reflect.Method;
 public class RedisConfig {
 
     @Bean
-    public RedisTemplate cacheRedisTemplate(RedisConnectionFactory cf) {
-        RedisTemplate redisTemplate = new RedisTemplate();
+    public RedisTemplate<String, User> cacheRedisTemplate(RedisConnectionFactory cf) {
+        RedisTemplate<String, User> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(cf);
         setSerializer(redisTemplate);
         return redisTemplate;
@@ -41,7 +41,7 @@ public class RedisConfig {
     /**
      * spring-data-redis对key和value 都进行了序列化 变成byte[]再调用对应的redis java client进行存储的
      */
-    private void setSerializer(RedisTemplate redisTemplate){
+    private void setSerializer(RedisTemplate<String, User> redisTemplate){
         //设置key序列化方式
         redisTemplate.setKeySerializer(new StringRedisSerializer());
 

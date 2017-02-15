@@ -53,10 +53,10 @@ public class OperationUserServiceImpl implements IOperationUserService{
         // 保存对象
         ValueOperations<String, User> operations = redisTemplate.opsForValue();
         operations.set(user.getId() + "", user);
-//        HashOperations operations = redisTemplate.opsForHash();
-//        HashMap<String, User> hashMap = new LinkedHashMap<>();
-//        hashMap.put(user.getId() + "", user);
-//        operations.putAll("hashUser", hashMap);
+        /*HashOperations operations = redisTemplate.opsForHash();
+        HashMap<String, User> hashMap = new LinkedHashMap<>();
+        hashMap.put(user.getId() + "", user);
+        operations.putAll("hashUser", hashMap);*/
 
         return user.getId();
     }

@@ -1,10 +1,12 @@
 package com.gtw.mybatis.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AudioTrans extends Trans {
     /**
      * 转码成功音频列表
