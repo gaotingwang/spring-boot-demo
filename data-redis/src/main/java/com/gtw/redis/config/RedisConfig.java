@@ -3,6 +3,7 @@ package com.gtw.redis.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gtw.redis.domain.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -18,7 +19,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.lang.reflect.Method;
 
 @Configuration
-@EnableCaching
+@EnableCaching//开启缓存支持
 public class RedisConfig {
 
     @Bean
@@ -30,10 +31,10 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate optRedisTemplate(RedisConnectionFactory cf) {
-        RedisTemplate redisTemplate = new RedisTemplate();
-        redisTemplate.setConnectionFactory(cf);
-        setSerializer(redisTemplate);
+    public RedisTemplate<String, User> optRedisTemplate(RedisConnectionFactory cf) {
+        RedisTemplate<String, User> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(cf);// 指定连接工厂
+        setSerializer(redisTemplate);// 设置redis的key与value的序列化方式
         return redisTemplate;
     }
 
@@ -53,6 +54,9 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
     }
 
+    /**
+     * 加载CacheManager
+     */
     @Bean
     public CacheManager cacheManager(@Qualifier("cacheRedisTemplate") RedisTemplate redisTemplate) {
         RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate);

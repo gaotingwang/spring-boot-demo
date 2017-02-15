@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,8 +19,10 @@ public class UserController {
     @Autowired
     private IOperationUserService operationUserService;
 
+    //////////////////////@Cache缓存操作/////////////////////////
+
     @RequestMapping(value = "/cacheAddUser", method = RequestMethod.GET)
-    public User addUser(){
+    public User cacheUser(){
         User user = new User(1,"张三","abc",20,"123@qq.com");
         return userService.addUser(user);
     }
@@ -35,25 +38,54 @@ public class UserController {
         return userService.getUsers(user);
     }
 
-    @RequestMapping(value = "/getUserByCondition", method = RequestMethod.GET)
+    @RequestMapping(value = "/cacheUserByCondition", method = RequestMethod.GET)
     public User getUserByCondition(@RequestParam boolean flag){
         return userService.getUserByCondition(flag);
     }
 
-    @RequestMapping(value = "/testAddUser", method = RequestMethod.GET)
-    public void apiAddUser(){
-        User user = new User(1,"张三","abc",20,"123@qq.com");
-        operationUserService.add(user);
+
+    ///////////////////////RedisTemplate操作////////////////////////
+
+    @RequestMapping(value = "/testAddString", method = RequestMethod.GET)
+    public void addString(){
+        operationUserService.addString();
     }
 
-    @RequestMapping(value = "/testOperationAddUser", method = RequestMethod.GET)
-    public void operationAddUser(){
+    @RequestMapping(value = "/testAddUser", method = RequestMethod.GET)
+    public int addUser(){
+        User user = new User((int)(Math.random()*100),"张三","abc",20,"123@qq.com");
+        return operationUserService.addUser(user);
+    }
+
+    @RequestMapping(value = "/testExecuteAdd", method = RequestMethod.GET)
+    public void executeAdd(){
         User user = new User(1,"张三","abc",20,"123@qq.com");
-        operationUserService.valueAddOperations(user);
+        operationUserService.executeAdd(user);
+    }
+
+    @RequestMapping(value = "/testPipeLineAdd", method = RequestMethod.GET)
+    public void pipeLineAdd(){
+        User user1 = new User(1,"张三","abc",20,"123@qq.com");
+        User user2 = new User(2,"张三","abc",20,"123@qq.com");
+        List<User> users = new ArrayList<>();
+        users.add(user1);
+        users.add(user2);
+
+        operationUserService.pipeLineAdd(users);
+    }
+
+    @RequestMapping(value = "/testDelete", method = RequestMethod.DELETE)
+    public void pipeLineAdd(@RequestParam String key){
+        operationUserService.delete(key);
     }
 
     @RequestMapping(value = "/testGetUser", method = RequestMethod.GET)
-    public User operationGetUser(@RequestParam String userId){
-        return operationUserService.get(userId);
+    public User operationGetUser(@RequestParam String key){
+        return operationUserService.getUser(key);
+    }
+
+    @RequestMapping(value = "/testUpdateUser", method = RequestMethod.GET)
+    public void operationUpdateUser(@RequestParam String key){
+        operationUserService.updateUser(key);
     }
 }
