@@ -25,14 +25,19 @@ public class UserController {
     }
 
     @RequestMapping(value = "/cacheGetUserByID", method = RequestMethod.GET)
-    public User getUserByID(){
-        return userService.getUserByID(1);
+    public User getUserByID(@RequestParam int id ){
+        return userService.getUserByID(id);
     }
 
     @RequestMapping(value = "/cacheGetUsers", method = RequestMethod.GET)
     public List<User> getUsers(){
-        User user = new User(2,"李四","123",22,"123@gmail.com");
+        User user = new User(2,"lisi","123",22,"123@gmail.com");
         return userService.getUsers(user);
+    }
+
+    @RequestMapping(value = "/getUserByCondition", method = RequestMethod.GET)
+    public User getUserByCondition(@RequestParam boolean flag){
+        return userService.getUserByCondition(flag);
     }
 
     @RequestMapping(value = "/testAddUser", method = RequestMethod.GET)

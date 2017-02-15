@@ -11,4 +11,6 @@ public interface ICacheUserService {
     User getUserByID(Integer id);
 
     List<User> getUsers(User user);
+
+    User getUserByCondition(boolean flag);
 }

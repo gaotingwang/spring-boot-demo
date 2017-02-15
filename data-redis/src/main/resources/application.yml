@@ -23,6 +23,7 @@ spring:
     port: 6379
     pool:
       max-active: 8
+    database: 2
 
 server:
   port: 8082

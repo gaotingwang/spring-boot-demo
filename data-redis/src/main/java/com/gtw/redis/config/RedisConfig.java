@@ -43,8 +43,9 @@ public class RedisConfig {
     private void setSerializer(RedisTemplate redisTemplate){
         //设置key序列化方式
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+
         //设置value序列化方式
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
@@ -67,12 +68,13 @@ public class RedisConfig {
     public KeyGenerator keyGenerator() {
         return new KeyGenerator() {
             @Override
-            public Object generate(Object o, Method method, Object... objects) {
+            public Object generate(Object clazz, Method method, Object... methodArgs) {
                 StringBuilder sb = new StringBuilder();
-                sb.append(o.getClass().getName());
-                sb.append(method.getName());
-                for (Object obj : objects) {
-                    sb.append(obj.toString());
+                sb.append(clazz.getClass().getName())
+                        .append(".")
+                        .append(method.getName());
+                for (Object arg : methodArgs) {
+                    sb.append(arg.toString());
                 }
                 return sb.toString();
             }
