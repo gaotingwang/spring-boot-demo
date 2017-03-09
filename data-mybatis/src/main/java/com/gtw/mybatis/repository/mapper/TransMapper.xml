@@ -53,7 +53,8 @@
         SELECT t.rawKey, message, type, state, coverKey, transKey, clarity, quality
         FROM trans t
         LEFT JOIN trans_details td ON t.rawKey = td.rawKey
-        where t.rawKey = #{key};
+        where t.rawKey = #{key}
+        -- AND type = #{type.ordinal}
     </select>
     <!--插入转码信息-->
     <insert id="add" parameterType="com.gtw.mybatis.domain.Trans">

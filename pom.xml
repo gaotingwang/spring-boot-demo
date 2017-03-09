@@ -28,6 +28,7 @@
         <module>data-mybatis</module>
         <module>jackson</module>
         <module>retry</module>
+        <module>web-jsp</module>
     </modules>
 
     <dependencies>
