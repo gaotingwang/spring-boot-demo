@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -23,18 +22,8 @@ public class WelcomeController {
         return "welcome";
     }
 
-    @RequestMapping("/foo")
-    @ResponseBody
-    public Map<String, Object> foo() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", "Ryan");
-        map.put("age", "3");
-        map.put("sex", "man");
-        return map;
+    @RequestMapping("/test")
+    public String foo() throws RuntimeException {
+        throw new RuntimeException("请求发生异常");
     }
-
-    @RequestMapping("/favicon.ico")
-    @ResponseBody
-    void favicon() {}
-
 }
