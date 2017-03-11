@@ -3,3 +3,12 @@ spring:
     url: jdbc:mysql://localhost:3306/msg?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
     username: root
     password: root
+    tomcat:
+          validation-query: "select 1"
+          test-on-borrow: true
+          validation-interval: 30000
+          remove-abandoned: true
+          remove-abandoned-timeout: 60
+          log-abandoned: true
+          abandon-when-percentage-full: 80
+          jdbc-interceptors: "ResetAbandonedTimer"

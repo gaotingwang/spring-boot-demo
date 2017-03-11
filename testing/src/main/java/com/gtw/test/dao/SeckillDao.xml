@@ -1,0 +1,41 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtw.test.dao.SeckillDao">
+    <insert id="add" parameterType="com.gtw.test.entity.Seckill">
+        INSERT INTO seckill (`name`, `number`, `start_time`, `end_time`)
+        VALUES (#{name}, #{number}, #{startTime}, #{endTime});
+    </insert>
+
+    <select id="queryById" resultType="com.gtw.test.entity.Seckill" parameterType="long">
+        SELECT
+        seckill_id seckillId,
+        name,
+        number,
+        create_time createTime,
+        start_time startTime,
+        end_time endTime
+        FROM seckill
+        WHERE seckill_id=#{seckillId}
+    </select>
+
+    <select id="queryAll" resultType="com.gtw.test.entity.Seckill">
+        SELECT
+        seckill_id seckillId,
+        name,
+        number,
+        create_time createTime,
+        start_time startTime,
+        end_time endTime
+        FROM seckill
+        ORDER BY create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <update id="reduceNumber">
+        UPDATE seckill
+        SET number = number-1
+        WHERE seckill_id=#{seckillId}
+        AND number > 0;
+    </update>
+</mapper>
