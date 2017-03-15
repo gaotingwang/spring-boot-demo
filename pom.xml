@@ -30,6 +30,7 @@
         <module>retry</module>
         <module>web-jsp</module>
         <module>testing</module>
+        <module>data-jpa</module>
     </modules>
 
     <dependencies>
