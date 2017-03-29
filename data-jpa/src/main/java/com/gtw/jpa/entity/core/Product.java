@@ -2,11 +2,14 @@ package com.gtw.jpa.entity.core;
 
 import com.gtw.jpa.entity.AbstractEntity;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.Assert;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -14,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "product")
 @Data
 public class Product extends AbstractEntity {
@@ -25,6 +29,10 @@ public class Product extends AbstractEntity {
 
     @Column(nullable = false)
     private BigDecimal price;
+
+    @CreatedDate// 需要在config中开启审计支持，对应的实体需要使用@EntityListeners(AuditingEntityListener.class)注解
+    @Column(updatable = false)// 否则实体更新时，可能会被覆盖
+    private Long createTime;
 
     @ElementCollection
     private Map<String, String> attributes = new HashMap<>();
