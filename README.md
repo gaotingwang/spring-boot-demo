@@ -42,7 +42,7 @@
 
 - 事件驱动模型也就是我们常说的观察者，或者发布-订阅模型。
 
-- 事件驱动首先是一种对象间的一对多的关系，当目标发送改变（发布），观察者（订阅者）就可以接收到改变，观察者如何处理（如行人如何走，是快走/慢走/不走，目标红绿灯不会管的），目标无需干涉，所以就松散耦合了它们之间的关系。
+- 事件驱动首先是一种对象间的一对多的关系，当目标发生改变（发布），观察者（订阅者）就可以接收到改变，观察者如何处理（如行人如何走，是快走/慢走/不走，目标红绿灯不会管的），目标无需干涉，所以就松散耦合了它们之间的关系。
 
 1. [定义需要监听的事件](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/model/RegisterEvent.java)
 
@@ -55,8 +55,6 @@
    - [使用注解@EventListener](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/listener/IndexRegisterListener.java)
 
 3. [执行事件](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/service/PublishRegister.java)
-
-- [事件使用demo](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/service/UserService.java)
 
 ## Retry
 
@@ -205,7 +203,54 @@
 
 ## Oauth2
 
+- Oauth2相关介绍理解，参考[本人博客理解Oauth2](http://gtwlover.oschina.io/2016/11/01/%E7%90%86%E8%A7%A3Oauth2/)
 
+- Oauth2 Server
+
+  ​
+
+  1. 添加依赖
+
+     ```xml
+     <!--security-->
+     <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-security</artifactId>
+     </dependency>
+     <!--oauth2-->
+     <dependency>
+         <groupId>org.springframework.security.oauth</groupId>
+         <artifactId>spring-security-oauth2</artifactId>
+     </dependency>
+     <!--redis-->
+     <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-data-redis</artifactId>
+     </dependency>
+     ```
+
+  2. 关于`Oauth2ServerConfig`请参考[SecurityConfig](https://github.com/gaotingwang/spring-boot-demo/blob/master/security-oauth2-server/src/main/java/com/gtw/security/config/Oauth2ServerConfig.java)
+
+     1. 用户名和密码的校验，需要指定`UserService`，`UserService`需要继承`UserDetailsService`
+
+     2. 指定`Token`的缓存方式
+
+     3. 指定密码的加密方式
+
+     4. 设置`AuthenticationManager`
+
+     5. **认证服务配置**
+
+     6. 资源服务配置
+
+  3. 用户名或密码修改时，[清除Token](https://github.com/gaotingwang/spring-boot-demo/blob/master/security-oauth2-server/src/main/java/com/gtw/security/service/TokenService.java)
+
+  4. 关于跨域问题，请参考[跨域解决](https://github.com/gaotingwang/spring-boot-demo/blob/master/security-oauth2-server/src/main/java/com/gtw/security/config/CorsConfig.java)
+
+- Oauth2 Client 
+  1. `Client`使用只需要从缓存中拿取到`Token`即可，所以客户端主要配置`tokenStore`
+  2. `ClientConfig`配置，请参考[ClientConfig](https://github.com/gaotingwang/spring-boot-demo/blob/master/security-oauth2-client/src/main/java/com/gtw/security/config/ClientConfig.java)
+  3. 关于`Oauth2`的`Request`请求配置，可参考[Oauth2RequestConfig](https://github.com/gaotingwang/spring-boot-demo/blob/master/security-oauth2-client/src/main/java/com/gtw/security/config/Oauth2RequestConfig.java)
 
 
 
