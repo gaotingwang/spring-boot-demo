@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 /**
+ * 若Oauth2的认证服务与应用的资源服务做在一起需要注意顺序问题
  * 1.ResourceServerConfigurerAdapter默认的Order为3,此处将WebSecurityConfigurerAdapter的Order设为6
  *   这样Oauth2的校验可以通过不会出现anonymousUser的情况
  *   但是Basic的校验会出现anonymousUser的情况,目前没有找到解决办法
@@ -38,6 +39,9 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 public class Oauth2ServerConfig extends WebSecurityConfigurerAdapter {
     private final IUserService userService;
 
+    /**
+     * 用户名和密码的匹配，需要依赖UserService
+     */
     @Autowired
     public Oauth2ServerConfig(IUserService userService) {
         this.userService = userService;
@@ -52,7 +56,7 @@ public class Oauth2ServerConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 使用Md5加密方式
+     * 使用Md5加密方式，也可以采用BCryptPasswordEncoder
      */
     @Bean
     public Md5PasswordEncoder passwordEncoder(){
