@@ -16,7 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 @Configuration
 @EnableOAuth2Client
-public class Oauth2ClientConfig {
+public class Oauth2RequestConfig {
     @Value("${oauth.resource:http://localhost:8080}")
     private String baseUrl;
 
@@ -26,7 +26,7 @@ public class Oauth2ClientConfig {
     @Value("${oauth.token:http://localhost:8080/oauth/token}")
     private String tokenUrl;
 
-//    @Value("${oauth.redirect:http://anywhere?key=value}")
+    //    @Value("${oauth.redirect:http://anywhere?key=value}")
     @Value("${oauth.redirect:http://localhost:8081/testClient/myLogin}")
     private String redirect;
 
