@@ -205,9 +205,7 @@
 
 - Oauth2相关介绍理解，参考[本人博客理解Oauth2](http://gtwlover.oschina.io/2016/11/01/%E7%90%86%E8%A7%A3Oauth2/)
 
-- Oauth2 Server
-
-  ​
+- Oauth2 Server​
 
   1. 添加依赖
 
