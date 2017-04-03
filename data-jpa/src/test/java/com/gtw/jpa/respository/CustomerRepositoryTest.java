@@ -22,6 +22,7 @@ public class CustomerRepositoryTest {
     private CustomerRepository customerRepository;
 
     @Test
+    @Commit
     public void save() throws Exception {
         Customer customer = new Customer("廷旺", "高", new EmailAddress("gaotingwang@qq.com"));
         customer.add(new Address("27 Broadway", "New York", "United States"));

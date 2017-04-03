@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -28,9 +29,10 @@ public class OrderRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
+    @Commit
     public void createOrder() {
 
-        Customer dave = customerRepository.findByEmailAddress(new EmailAddress("dave@dmband.com"));
+        Customer dave = customerRepository.findByEmailAddress(new EmailAddress("gaotingwang@qq.com"));
         Product iPad = productRepository.findOne(1L);
 
         Order order = new Order(dave, dave.getAddresses().iterator().next());
@@ -42,7 +44,7 @@ public class OrderRepositoryTest {
 
     @Test
     public void findByCustomer() throws Exception {
-        Customer dave = customerRepository.findByEmailAddress(new EmailAddress("dave@dmband.com"));
+        Customer dave = customerRepository.findByEmailAddress(new EmailAddress("gaotingwang@qq.com"));
         List<Order> orders = orderRepository.findByCustomer(dave);
 
         assertEquals(1, orders.size());

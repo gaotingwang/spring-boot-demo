@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class ProductRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
+    @Commit
     public void createProduct() {
 
         Product product = new Product("Camera bag", new BigDecimal(49.99));
