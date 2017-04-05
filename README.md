@@ -201,11 +201,138 @@
 
 6. 其他功能，如需请参考[官方文档](http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/)
 
+## Querydsl
+
+1. 引入依赖
+
+   ```xml
+   <dependency>
+       <groupId>com.querydsl</groupId>
+       <artifactId>querydsl-apt</artifactId>
+       <version>${querydsl.version}</version>
+   </dependency>
+   <dependency>
+       <groupId>com.querydsl</groupId>
+       <artifactId>querydsl-core</artifactId>
+       <version>${querydsl.version}</version>
+   </dependency>
+   <dependency>
+       <groupId>com.querydsl</groupId>
+       <artifactId>querydsl-collections</artifactId>
+       <version>${querydsl.version}</version>
+   </dependency>
+   ```
+
+2. 工程构建时需要引入插件,这样会在工程模块的target/generated-sources/java对应目录下会生成相应的查询类QClass
+
+   ```xml
+   <build>
+       <plugins>
+           <plugin>
+               <groupId>com.mysema.maven</groupId>
+               <artifactId>apt-maven-plugin</artifactId>
+               <version>1.1.3</version>
+               <executions>
+                   <execution>
+                       <phase>generate-sources</phase>
+                       <goals>
+                           <goal>process</goal>
+                       </goals>
+                       <configuration>
+                           <!-- If you are not using JPA or JDO -->
+                           <outputDirectory>target/generated-sources/java</outputDirectory>
+                           <processor>com.querydsl.apt.QuerydslAnnotationProcessor</processor>
+                       </configuration>
+                   </execution>
+               </executions>
+           </plugin>
+       </plugins>
+   </build>
+   ```
+
+3. 集合查询的querysql使用，参考[Querydsl使用](https://github.com/gaotingwang/spring-boot-demo/blob/master/data-querydsl/src/main/java/com/gtw/querydsl/core/Product.java)
+
+4. Jpa集成Querysql,引入依赖与插件
+
+   ```xml
+   <dependencies>
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-data-jpa</artifactId>
+       </dependency>
+       <dependency>
+           <groupId>mysql</groupId>
+           <artifactId>mysql-connector-java</artifactId>
+           <scope>runtime</scope>
+       </dependency>
+
+       <!--querydsl支持-->
+       <dependency>
+           <groupId>com.querydsl</groupId>
+           <artifactId>querydsl-apt</artifactId>
+       </dependency>
+       <dependency>
+           <groupId>com.querydsl</groupId>
+           <artifactId>querydsl-jpa</artifactId>
+       </dependency>
+       <dependency>
+           <groupId>com.querydsl</groupId>
+           <artifactId>querydsl-jpa</artifactId>
+           <version>${querydsl.version}</version>
+           <classifier>apt</classifier>
+       </dependency>
+       <dependency>
+           <groupId>javax.inject</groupId>
+           <artifactId>javax.inject</artifactId>
+           <version>1</version>
+       </dependency>
+       <!--test-->
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-test</artifactId>
+           <scope>test</scope>
+       </dependency>
+   </dependencies>
+
+   <build>
+       <plugins>
+           <plugin>
+               <groupId>com.mysema.maven</groupId>
+               <artifactId>apt-maven-plugin</artifactId>
+               <version>1.1.3</version>
+               <dependencies>
+                   <dependency>
+                       <groupId>com.querydsl</groupId>
+                       <artifactId>querydsl-apt</artifactId>
+                       <version>${querydsl.version}</version>
+                   </dependency>
+               </dependencies>
+               <executions>
+                   <execution>
+                       <goals>
+                           <goal>process</goal>
+                       </goals>
+                       <configuration>
+                           <!--JPAAnnotationProcessor查找使用javax.persistence.Entity注释注释的域类型，并为它们生成查询类型-->
+                           <!--<outputDirectory>target/generated-sources/java</outputDirectory>-->
+                           <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                       </configuration>
+                   </execution>
+               </executions>
+           </plugin>
+       </plugins>
+   </build>
+   ```
+
+5. Repository层使用QueryDsl，需要继承QueryDslPredicateExecutor，参考[ProductRepository](https://github.com/gaotingwang/spring-boot-demo/blob/master/data-jpa/src/main/java/com/gtw/jpa/respository/ProductRepository.java)
+
+6. 也可用使用JPAQueryFactory，参考[OrderRepositoryCustomer](https://github.com/gaotingwang/spring-boot-demo/blob/master/data-jpa/src/main/java/com/gtw/jpa/respository/impl/OrderRepositoryCustomerImpl.java)
+
 ## Oauth2
 
 - Oauth2相关介绍理解，参考[本人博客理解Oauth2](http://gtwlover.oschina.io/2016/11/01/%E7%90%86%E8%A7%A3Oauth2/)
 
-- Oauth2 Server​
+- Oauth2 Server
 
   1. 添加依赖
 
