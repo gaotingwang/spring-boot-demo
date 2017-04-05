@@ -5,11 +5,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface ProductRepository extends CrudRepository<Product, Long> {
+/**
+ * 继承QueryDslPredicateExecutor 使用Querydsl
+ */
+public interface ProductRepository extends CrudRepository<Product, Long>, QueryDslPredicateExecutor<Product> {
 
     /**
      * 这里使用了Containing关键字，最终会根据指定参数，在其前后加%，会通过LIKE操作符进行限制

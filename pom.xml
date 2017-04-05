@@ -32,6 +32,7 @@
         <module>testing</module>
         <module>data-jpa</module>
         <module>event</module>
+        <module>data-querydsl</module>
     </modules>
 
     <dependencies>
