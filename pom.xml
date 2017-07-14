@@ -46,6 +46,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--You can easily generate your own configuration meta-data file from items annotated with
+        @ConfigurationProperties by using the spring-boot-configuration-processor jar.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--tool-->
         <dependency>
             <groupId>org.projectlombok</groupId>
