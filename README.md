@@ -225,13 +225,12 @@
        }
    }
 
-
    /**
     * 主数据源详情配置
     */
    @Configuration
    // 制定分库的mapper文件地址，以及分库到层代码
-   @MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.master", sqlSessionTemplateRef  = "masterSqlSessionTemplate")
+   @MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.master", sqlSessionTemplateRef = "masterSqlSessionTemplate")
    public class MasterDataSourceConfig {
 
        /**
@@ -268,7 +267,6 @@
    }
    ```
 
-7. ​
 
 ## JPA
 
@@ -276,15 +274,16 @@
 
    ```xml
    <dependency>
-       <groupId>org.springframework.boot</groupId>
-       <artifactId>spring-boot-starter-data-jpa</artifactId>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-data-jpa</artifactId>
    </dependency>
    <dependency>
-       <groupId>mysql</groupId>
-       <artifactId>mysql-connector-java</artifactId>
-       <scope>runtime</scope>
+     <groupId>mysql</groupId>
+     <artifactId>mysql-connector-java</artifactId>
+     <scope>runtime</scope>
    </dependency>
    ```
+
 
 2. [对象实体常用注解使用](https://github.com/gaotingwang/spring-boot-demo/blob/master/data-jpa/src/main/java/com/gtw/jpa/entity/core/Customer.java)
 
