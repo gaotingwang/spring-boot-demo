@@ -175,6 +175,101 @@
    </build>
    ```
 
+6. 多数据源配置
+
+   a.多数据库yml配置
+
+   ```yaml
+   demo:
+     datasource:
+       master:
+         url: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+         username: root
+         password: root
+         driver-class-name: com.mysql.jdbc.Driver
+       slave:
+         url: jdbc:mysql://localhost:3306/test2?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+         username: root
+         password: root
+         driver-class-name: com.mysql.jdbc.Driver
+   ```
+
+   b.相关config，[具体代码](https://github.com/gaotingwang/spring-boot-demo/tree/master/data-mybatis/src/main/java/com/gtw/mybatis/config)
+
+   ```java
+   /**
+    * 配置多数据源
+    */
+   @Configuration
+   public class DataSourceConfig {
+
+       /**
+        * 主数据源
+        */
+       @Primary
+       @Bean(name = "masterDataSource")
+       @Qualifier("masterDataSource")
+       @ConfigurationProperties(prefix="demo.datasource.master")
+       public DataSource masterDataSource() {
+           return DataSourceBuilder.create().build();
+       }
+
+       /**
+        * 从数据源
+        */
+       @Bean(name = "slaveDataSource")
+       @Qualifier("slaveDataSource")
+       @ConfigurationProperties(prefix="demo.datasource.slave")
+       public DataSource slaveDataSource() {
+           return DataSourceBuilder.create().build();
+       }
+   }
+
+
+   /**
+    * 主数据源详情配置
+    */
+   @Configuration
+   // 制定分库的mapper文件地址，以及分库到层代码
+   @MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.master", sqlSessionTemplateRef  = "masterSqlSessionTemplate")
+   public class MasterDataSourceConfig {
+
+       /**
+        * 创建SqlSessionFactory
+        */
+       @Primary
+       @Bean(name = "masterSqlSessionFactory")
+       public SqlSessionFactory sqlSessionFactory(@Qualifier("masterDataSource") DataSource dataSource) throws Exception {
+           SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+           sessionFactoryBean.setDataSource(dataSource);
+   //        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
+   //                .getResources("classpath*:mapper/master/*.xml"));
+           return sessionFactoryBean.getObject();
+       }
+
+       /**
+        * 创建事务管理
+        */
+       @Primary
+       @Bean(name = "masterTransactionManager")
+       public DataSourceTransactionManager transactionManager(@Qualifier("masterDataSource") DataSource dataSource) {
+           return new DataSourceTransactionManager(dataSource);
+       }
+
+       /**
+        * 将SqlSessionFactory包装到SqlSessionTemplate中
+        */
+       @Primary
+       @Bean(name = "masterSqlSessionTemplate")
+       public SqlSessionTemplate sqlSessionTemplate(@Qualifier("masterSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+           return new SqlSessionTemplate(sqlSessionFactory);
+       }
+
+   }
+   ```
+
+7. ​
+
 ## JPA
 
 1. 引入依赖

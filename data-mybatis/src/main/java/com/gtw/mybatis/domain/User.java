@@ -10,10 +10,10 @@ public class User {
     private long id;
     private String userName;
     private String passWord;
-    private String userSex;
+    private Sex userSex;
     private String nickName;
 
     public enum Sex{
-        MAN,WOMAN;
+        MAN, WOMAN;
     }
 }

@@ -1,6 +1,5 @@
 package com.gtw.mybatis.repository.mapper.slave;
 
-import com.gtw.mybatis.domain.Trans;
 import com.gtw.mybatis.domain.User;
 
 import java.util.List;

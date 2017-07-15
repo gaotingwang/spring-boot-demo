@@ -17,25 +17,35 @@ import javax.sql.DataSource;
  * 主数据源详情配置
  */
 @Configuration
-@MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.master", sqlSessionTemplateRef  = "masterSqlSessionTemplate")
+// 制定分库的mapper文件地址，以及分库到层代码
+@MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.master", sqlSessionTemplateRef = "masterSqlSessionTemplate")
 public class MasterDataSourceConfig {
 
+    /**
+     * 创建SqlSessionFactory
+     */
     @Primary
     @Bean(name = "masterSqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("masterDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath*:mapper/master/*.xml"));
+//        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
+//                .getResources("classpath*:mapper/master/*.xml"));
         return sessionFactoryBean.getObject();
     }
 
+    /**
+     * 创建事务管理
+     */
     @Primary
     @Bean(name = "masterTransactionManager")
     public DataSourceTransactionManager transactionManager(@Qualifier("masterDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    /**
+     * 将SqlSessionFactory包装到SqlSessionTemplate中
+     */
     @Primary
     @Bean(name = "masterSqlSessionTemplate")
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("masterSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {

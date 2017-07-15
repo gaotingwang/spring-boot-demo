@@ -17,25 +17,23 @@ import javax.sql.DataSource;
  * 从数据源详情配置
  */
 @Configuration
-@MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.slave", sqlSessionTemplateRef  = "masterSqlSessionTemplate")
+@MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.slave", sqlSessionTemplateRef  = "slaveSqlSessionTemplate")
 public class SlaveDataSourceConfig {
 
     @Bean(name = "slaveSqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("slaveDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath*:mapper/slave/*.xml"));
+//        sessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
+//                .getResources("classpath*:mapper/slave/*.xml"));
         return sessionFactoryBean.getObject();
     }
 
-    @Primary
     @Bean(name = "slaveTransactionManager")
     public DataSourceTransactionManager transactionManager(@Qualifier("slaveDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Primary
     @Bean(name = "slaveSqlSessionTemplate")
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("slaveSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);

@@ -22,7 +22,6 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        System.out.println("aaaaaaaaaaaaa");
         List<User> users = userMapper1.getAll();
         return users;
     }
