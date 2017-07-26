@@ -3,6 +3,7 @@ package com.gtw.mybatis.controller;
 import com.gtw.mybatis.domain.User;
 import com.gtw.mybatis.repository.mapper.master.TestMasterMapper;
 import com.gtw.mybatis.repository.mapper.slave.TestSlaveMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        List<User> users = userMapper1.getAll();
+        List<User> users = userMapper1.getAll(new RowBounds(0,2));//采用逻辑分页查询
         return users;
     }
 
