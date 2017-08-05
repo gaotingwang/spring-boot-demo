@@ -36,7 +36,37 @@
 
   5. [示例代码](https://github.com/gaotingwang/spring-boot-demo/tree/master/web-jsp)
 
-- Thymeleaf模板引擎（敬请后续...）
+- Thymeleaf模板引擎
+
+  Spring Boot提供了默认配置的模板引擎主要有以下几种：
+
+  - Thymeleaf
+  - FreeMarker
+  - Velocity
+  - Groovy
+  - Mustache
+
+  当你使用上述模板引擎中的任何一个，它们默认的模板配置路径为：`src/main/resources/templates`。当然也可以修改这个路径，具体如何修改，可在后续各模板引擎的配置属性中查询并修改。
+
+  Spring Boot默认提供静态资源目录位置需置于classpath下，目录名需符合如下规则：
+
+  - /static
+  - /public
+  - /resources
+  - /META-INF/resources
+
+  举例：我们可以在`src/main/resources/`目录下创建`static`，在该位置放置一个图片文件。启动程序后，尝试访问`http://localhost:8080/d.jpg`。如能显示图片，则配置成功。PS:在此目录下放入`favicon.ico`，页面会自动加载图标。
+
+  在Spring Boot中使用Thymeleaf，只需要引入下面依赖，并在默认的模板路径`src/main/resources/templates`下编写模板文件即可完成。
+
+  ```xml
+  <dependency>
+  	<groupId>org.springframework.boot</groupId>
+  	<artifactId>spring-boot-starter-thymeleaf</artifactId>
+  </dependency>
+  ```
+
+  更多Thymeleaf的页面语法，还请访问Thymeleaf的官方文档查询使用。
 
 ## Event
 
