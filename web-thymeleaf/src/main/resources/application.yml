@@ -1,6 +1,6 @@
 spring:
   thymeleaf:
-    cache: true # Enable template caching.
+    cache: false # Enable template caching.
     check-template-location: true # Check that the templates location exists.
     content-type: text/html # Content-Type value.
     enabled: true # Enable MVC Thymeleaf view resolution.

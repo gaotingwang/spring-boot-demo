@@ -16,12 +16,12 @@
 demo:
   datasource:
     master:
-      url: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+      url: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
       username: root
       password: root
       driver-class-name: com.mysql.jdbc.Driver
     slave:
-      url: jdbc:mysql://localhost:3306/test2?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+      url: jdbc:mysql://localhost:3306/test2?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
       username: root
       password: root
       driver-class-name: com.mysql.jdbc.Driver

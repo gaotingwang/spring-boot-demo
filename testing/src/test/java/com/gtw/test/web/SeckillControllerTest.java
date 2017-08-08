@@ -43,6 +43,7 @@ public class SeckillControllerTest {
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+//        mockMvc = MockMvcBuilders.standaloneSetup(new HelloController()).build();
     }
 
     @Test
