@@ -11,3 +11,8 @@ spring:
     suffix: .html # Suffix that gets appended to view names when building a URL.
     template-resolver-order: # Order of the template resolver in the chain.
 #    view-names: # Comma-separated list of view names that can be resolved.
+
+    ## thymeleaf 对 .html 内容要求比较严格，比如少封闭符号/，就会报错，如果使用vue.js<div v-cloak></div> 这样的html，会被认为不符合要求
+    ## 可以做下列设置方式, 设置不校验html标签(thymeleaf模板对没有结束符的HTML5标签解析出错的解决办法, http://blog.csdn.net/yalishadaa/article/details/60768811)
+#    cache: false
+#    mode: LEGACYHTML5 #legacyhtml5需要搭配额外的NekoHTML库
