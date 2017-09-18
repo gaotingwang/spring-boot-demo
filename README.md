@@ -116,6 +116,8 @@
 
 在完成了上述配置后，其实已经可以生产文档内容，但是这样的文档主要针对请求本身，而描述主要来源于函数等命名产生，对用户并不友好，我们通常需要自己增加一些说明来丰富文档内容。如下所示，我们通过`@ApiOperation`注解来给API增加说明、通过`@ApiImplicitParams`、`@ApiImplicitParam`注解来给参数增加说明。具体使用参看[示例](https://github.com/gaotingwang/spring-boot-demo/blob/master/data-mybatis/src/main/java/com/gtw/mybatis/controller/UserController.java)。
 
+启动Spring Boot程序，访问：[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
 ## Event
 
 - 事件驱动模型也就是我们常说的观察者，或者发布-订阅模型。
