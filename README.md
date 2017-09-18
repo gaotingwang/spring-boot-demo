@@ -92,6 +92,43 @@
   ```
 
   通过`@ControllerAdvice`统一定义不同Exception映射到不同错误处理页面。而当我们要实现RESTful API时，返回的错误是JSON格式的数据，而不是HTML页面，这时候也能轻松支持。本质上，只需在`@ExceptionHandler`之后加入`@ResponseBody`，就能让处理函数return的内容转换为JSON格式。
+## 热部署
+
+仅需要添加devtools依赖：
+
+```xml
+<!--支持热部署，devtools会监听classpath下的文件变动，并且会立即重启应用（发生在保存时机），注意：因为其采用的虚拟机机制，该项重启是很快的-->
+<!--Intellij要想支持还需要进一步设置，自行google-->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-devtools</artifactId>
+  <!-- optional=true,依赖不会传递，该项目依赖devtools；之后依赖myboot项目的项目如果想要使用devtools，需要重新引入 -->
+  <optional>true</optional>
+</dependency>
+
+...
+
+<plugins>
+  <plugin>
+    <!--用于将应用打成可直接运行的jar-->
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <!--支持热部署-->
+    <configuration>
+      <fork>true</fork>
+    </configuration>
+  </plugin>
+  <!-- spring Boot在编译的时候，是有默认JDK版本的，如果我们期望使用我们要的JDK版本的话，那么要配置呢 -->
+  <plugin>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+      <source>1.8</source>
+      <target>1.8</target>
+    </configuration>
+  </plugin>
+</plugins>
+```
+
 ## Swagger2
 
 `Swagger2`它可以轻松的整合到`Spring Boot`中，并与`Spring MVC`程序配合组织出强大RESTful API文档。它既可以减少我们创建文档的工作量，同时说明内容又整合入实现代码中，让维护文档和修改代码整合为一体，可以让我们在修改代码逻辑的同时方便的修改文档说明。
