@@ -25,3 +25,7 @@ demo:
       username: root
       password: root
       driver-class-name: com.mysql.jdbc.Driver
+logging:
+  level:
+    com.gtw.mybatis.repository.mapper: TRACE # sql打印
+    org.springframework: warn
