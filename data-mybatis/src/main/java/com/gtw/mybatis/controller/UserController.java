@@ -42,7 +42,7 @@ public class UserController {
     @ApiOperation(value="创建用户", notes="根据User对象创建用户")
     @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User")
     @PostMapping("/users")
-    public void save(User user) {
+    public void save(@RequestBody User user) {
         userMapper2.insert(user);
     }
 
@@ -52,7 +52,7 @@ public class UserController {
             @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User")
     })
     @PutMapping(value="/users/{userId}")
-    public void update(User user) {
+    public void update(@RequestBody User user) {
         userMapper2.update(user);
     }
 

@@ -383,6 +383,9 @@
 
    }
    ```
+   此种方式指明哪个包下dao接口或配置文件走哪个数据库，缺点很明显，相同的dao接口和配置文件要复制多份到不同包路径下，不易维护和扩展。
+   
+   具体使用主从分离的读写方式，可以参看[mybatis-master-slave](https://github.com/gaotingwang/skill-util/tree/master/mybatis-master-slave)
 
 
 ## JPA
