@@ -593,4 +593,240 @@
 
 
 
+## 自定义Starter
+
+Spring Boot Starter 是一个 Maven 或 Gradle 模块，其唯一目的是提供 "启动" 某个特性所需的所有依赖项。可以包含一个或多个 Auto-Configure Module (自动配置模块)的依赖项，以及可能需要的任何其他依赖项。这样，在Spring 启动应用程序中，只需要添加这个 starter 依赖就可以使用其特性。
+
+通常一个完整的 starter 需要包含下面两个组件:
+
+1. Auto-Configure Module
+2. Starter Module
+
+### 命名
+
+来自 Spring 官方的 starter 都是 以 `spring-boot-starter` 开头，比如:
+
+- spring-boot-starter-web
+- spring-boot-starter-aop
+
+如果我们自定义 starter 功能名称叫`acme`，那么我们的命名是这样的:
+
+- acme-spring-boot-starter
+
+- acme-spring-boot-autoconfigure
+
+如果 starter 中用到了配置 keys，也要注意不要使用 Spring Boot 使用的命名空间。
+
+### Parent Module 创建
+
+先来全局看一下项目结构:
+
+- 一级目录结构:
+
+  ```
+  .
+  ├── pom.xml
+  ├── gtw-spring-boot-autoconfigure
+  ├── gtw-spring-boot-sample
+  └── gtw-spring-boot-starter
+  ```
+
+  
+
+- 二级目录结构:
+
+  ```
+  .
+  ├── pom.xml
+  ├── gtw-spring-boot-autoconfigure
+  │   ├── pom.xml
+  │   └── src
+  ├── gtw-spring-boot-sample
+  │   ├── pom.xml
+  │   └── src
+  └── gtw-spring-boot-starter
+      ├── pom.xml
+      └── src
+  ```
+
+  
+
+创建一个空的父亲 Maven Module，主要提供依赖管理，这样 SubModule 不用单独维护依赖版本号:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring-boot.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+### Auto-Configure Module 构建
+
+#### Maven依赖
+
+```xml
+<dependencies>
+    <!-- Compile dependencies -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <!-- 属性是要在 application.yml 中使用的，当需要使用这些属性时，为了让ID 给出更友好的提示，需要在 pom.xml 中添加依赖 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-configuration-processor</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <!--
+    对于类路径上的每个自动配置类，Spring Boot 必须计算 @Conditional… 条件值，用于决定是否加载自动配置及其所需的所有类，
+    根据 Spring 启动应用程序中 starter 的大小和数量，这可能是一个非常昂贵的操作，并且会影响启动时间，
+    为了提升启动时间，需要在 pom.xml 中添加一个依赖.
+    这样，Spring Boot 在启动期间读取这些元数据，可以过滤出不满足条件的配置，而不必实际检查这些类，提升启动速度
+    -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-autoconfigure-processor</artifactId>
+        <optional>true</optional>
+    </dependency>
+</dependencies>
+```
+
+
+
+#### 配置属性管理
+
+```java
+@Data
+@ConfigurationProperties(prefix = "gtw.greeting")
+public class GtwProperties {
+    /**
+     * GreetingProperties 开关
+     */
+    boolean enable = false;
+
+    /**
+     * 需要打招呼的成员列表
+     */
+    List<String> members = new ArrayList<>();
+}
+```
+
+
+
+#### 新建`AutoConfiguration`
+
+用 `@Configuration` 注解标记类 AutoConfiguration，作为 starter 的入口点。这个**配置包含了需要提供starter特性的所有 `@Bean` 定义**:
+
+```java
+@Configuration
+@EnableConfigurationProperties(GtwProperties.class)
+@ConditionalOnProperty(value = "gtw.greeting.enable", havingValue = "true")
+@ConditionalOnClass(DefaultSqlSession.class)
+public class GtwAutoConfiguration {
+
+    @Bean
+    public GreetingService greetingService(GtwProperties gtwProperties){
+        return new GreetingService(gtwProperties.getMembers());
+    }
+}
+```
+
+在 resources 目录下新建文件 `META-INF/spring.factories` ，向文件写入内容:
+
+```properties
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+ com.gtw.spring.boot.autoconfigure.GtwAutoConfiguration
+```
+
+Spring 启动时会在其 classpath 中所有的 `spring.factoreis` 文件，并加载里面的声明配置，AutoConfiguration 类就绪后，我们的 Spring Boot Starter 就有了一个自动激活的入口点。
+
+关于条件配置，参考 [@Conditional注解，灵活配置 Spring Boot](https://link.zhihu.com/?target=https%3A//dayarch.top/p/spring-boot-condition-annotation.html)
+
+
+
+### Starter Module 构建
+
+Starter Module 构建很简单，可以认为它就是一个空 module，除了依赖 Auto-Configure Module，**其唯一作用就是为了使用 starter 功能特性提供所有必须依赖**，所以为 starter module 的 pom.xml 文件添加如下内容:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.gtw.starter</groupId>
+        <artifactId>gtw-spring-boot-autoconfigure</artifactId>
+        <version>${gtw.autoconfigure.version}</version>
+    </dependency>
+
+    <!-- 在此处添加其他必要依赖，保证starter可用 -->
+</dependencies>
+```
+
+同样在 resources 目录下新建文件 `META-INF/spring.providers` , 其内容如下:
+
+```text
+providers: gtw-spring-boot-autoconfigure
+```
+
+该文件主要作用是说明 starter module 的依赖信息，多个依赖以逗号分隔就好，该文件不会影响 starter 的使用，可有可无。
+
+
+
+### Sample Module 构建
+
+可以通过 Spring Initializr 正常初始化一个 Spring Boot 项目 (gtw-spring-boot-sample)，引入刚刚创建的 starter 依赖，在 sample pom.xml 中添加依赖:
+
+```xml
+<dependencies>
+    <!-- spring boot -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
+    <!-- gtw-starter -->
+    <dependency>
+        <groupId>com.gtw.starter</groupId>
+        <artifactId>gtw-spring-boot-starter</artifactId>
+        <version>${gtw.starter.version}</version>
+    </dependency>
+</dependencies>
+```
+
+配置 application.yml 属性：
+
+```yaml
+gtw:
+  greeting:
+    enable: true
+    members:
+      - 李雷
+      - 韩梅梅
+```
+
+使用测试：
+
+```java
+@SpringBootApplication
+public class SampleApplication {
+    @Autowired
+    private GreetingService greetingService;
+
+    @PostConstruct
+    public void sayHello(){
+        greetingService.sayHello();
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(SampleApplication.class, args);
+    }
+}
+```
 

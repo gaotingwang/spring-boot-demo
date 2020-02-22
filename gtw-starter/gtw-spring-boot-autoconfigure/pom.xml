@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>gtw-starter</artifactId>
+        <groupId>com.gtw.starter</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>gtw-spring-boot-autoconfigure</artifactId>
+
+    <dependencies>
+        <!-- Compile dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <!-- 属性是要在 application.yml 中使用的，当需要使用这些属性时，为了让ID 给出更友好的提示，需要在 pom.xml 中添加依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--
+        对于类路径上的每个自动配置类，Spring Boot 必须计算 @Conditional… 条件值，用于决定是否加载自动配置及其所需的所有类，
+        根据 Spring 启动应用程序中 starter 的大小和数量，这可能是一个非常昂贵的操作，并且会影响启动时间，
+        为了提升启动时间，需要在 pom.xml 中添加一个依赖.
+        这样，Spring Boot 在启动期间读取这些元数据，可以过滤出不满足条件的配置，而不必实际检查这些类，提升启动速度
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Optional dependencies -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.4</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>
