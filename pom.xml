@@ -36,6 +36,7 @@
         <module>data-gemfire</module>
         <module>web-thymeleaf</module>
         <module>mq-rabbitMQ</module>
+        <module>data-elasticsearch-client</module>
     </modules>
 
     <dependencies>
