@@ -12,7 +12,7 @@
     <artifactId>data-elasticsearch</artifactId>
 
     <properties>
-        <elasticsearch.version>6.8.15</elasticsearch.version>
+        <elasticsearch.version>6.8.17</elasticsearch.version>
     </properties>
 
     <dependencies>

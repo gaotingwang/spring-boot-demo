@@ -33,7 +33,7 @@
         <module>data-jpa</module>
         <module>event</module>
         <module>data-querydsl</module>
-        <module>data-gemfire</module>
+<!--        <module>data-gemfire</module>-->
         <module>web-thymeleaf</module>
         <module>mq-rabbitMQ</module>
         <module>data-elasticsearch</module>
