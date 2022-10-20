@@ -11,11 +11,15 @@
 
     <artifactId>data-elasticsearch</artifactId>
 
+    <properties>
+        <elasticsearch.version>6.8.15</elasticsearch.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>transport</artifactId>
-            <version>6.3.2</version>
+            <version>${elasticsearch.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>elasticsearch</artifactId>
@@ -26,17 +30,17 @@
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>6.3.2</version>
+            <version>${elasticsearch.version}</version>
         </dependency>
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-client</artifactId>
-            <version>6.8.15</version>
+            <version>${elasticsearch.version}</version>
         </dependency>
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>6.3.2</version>
+            <version>${elasticsearch.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>log4j-core</artifactId>
