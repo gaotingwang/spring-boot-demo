@@ -92,6 +92,76 @@
   ```
 
   通过`@ControllerAdvice`统一定义不同Exception映射到不同错误处理页面。而当我们要实现RESTful API时，返回的错误是JSON格式的数据，而不是HTML页面，这时候也能轻松支持。本质上，只需在`@ExceptionHandler`之后加入`@ResponseBody`，就能让处理函数return的内容转换为JSON格式。
+## Web flux
+
+![spring reactor](https://gtw.oss-cn-shanghai.aliyuncs.com/Spring/spring-reactor.jpeg)
+
+Reactor 本质就是： [jdk8 stream + jdk9 reactive stream](https://github.com/gaotingwang/material/blob/master/%E6%8A%80%E6%9C%AF/Java/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%92%8Clambda%E8%A1%A8%E8%BE%BE%E5%BC%8F.md)
+
+Reactive Programming 作为观察者（Observer）的延伸，不同于传统的命令编程方式（Imperative programming）同步拉取数据的方式，如迭代器模式（Iterator）。而是采用数据发布者同步或异步地推送到数据流（Data Streams）的方案。当该数据流订阅者监听到传播变化时，立即作出响应动作。在实现层面上，Reactive Programming可**结合函数式编程简化面向对象语言语法的臃肿性，屏蔽并发实现的复杂细节，提供数据流的有序操作，从而达到提升代码的可读性，以及减少Bug出现的目的。同时，Reactive Programming结合背压（Backpressure）的技术解决发布生成数据的速率高于订阅端消费的问题**。
+
+添加依赖：
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-webflux</artifactId>
+</dependency>
+```
+
+webFlux支持通过Controller方式来进行调用，也可以通过Router方式进行调用：
+
+- [RestController方式](https://github.com/gaotingwang/spring-boot-demo/tree/master/web-flux/src/main/java/com/gtw/webflux/controller)
+
+  `TestController`中，举例说明了通过servlet的阻塞I/O 和 reactive stream非阻塞的差别，可以提高吞吐量（但并不能解决性能问题），以及`Mono` 和 `Flux`的区别。`UserController`列举了Flux的常规用法。
+
+  **补充**：服务事件发送 server-sent events（适用于服务器向前端推送数据的场景）:
+
+  后台：
+
+  1. 需要设置响应的`Content-Type="text/event-stream"`
+
+  2. 设置编码类型`CharacterEncoding=utf-8`
+
+  3. 返回内容
+
+     - 指定事件标识：`event:${eventName}\n`
+
+     - 事件内容：
+
+       格式：data + 数据内容 + 2个回车
+
+       栗子：`data:${dataContent}\n\n`
+
+  4. 刷新内容 `response.getWrite().flush()`
+
+  前端：
+
+  ```js
+  // 依赖H5
+  var sse = new EventSource("SSE"); // 传入请求地址url
+  
+  sse.onmessage = function(e){
+      console.log("message:", e.data, e);
+  }
+  
+  sse.addEventListener("${eventName}", function(e){
+      console.log("listen event:", e.data);
+      // 满足条件后断开，否则会继续重连
+      if(e.data == 3) {
+          sse.close();
+      }
+  });
+  ```
+
+- [Router Functions 开发模式](https://github.com/gaotingwang/spring-boot-demo/tree/master/web-flux/src/main/java/com/gtw/webflux/function)
+
+  1. 编写 HandlerFunction (输入ServerRequest, 返回ServerResponse)，举例`UserHandler`
+  2. 定义 RouterFunction (将请求URL 和 HandlerFunction 对应起来)，举例`AllRouters`
+  3. 之后会交由Spring的`HttpHandler` -> `Server`（Netty或Servlet3.1+）处理
+
+响应式在网页请求下，看到差别并不是很大，它更多适用于服务器之间的Rest调用，异步非阻塞特性才能更好的呈现出来，更有价值。
+
 ## 热部署
 
 仅需要添加devtools依赖：
