@@ -8,6 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import reactor.core.publisher.Flux;
 
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 @SpringBootApplication
 @EnableReactiveMongoRepositories
 @Slf4j
@@ -15,7 +18,7 @@ public class WebFluxApplication {
 
     public static void main(String[] args) {
 
-//        Subscriber<Integer> subscriber = new Subscriber<>() {
+//        Subscriber<Integer> subscriber = new Subscriber<Integer>() {
 //            private Subscription subscription;
 //
 //            @Override
@@ -63,6 +66,22 @@ public class WebFluxApplication {
 //        System.out.println(Thread.currentThread().getName() + " --> 发布完毕");
 
         SpringApplication.run(WebFluxApplication.class, args);
+
+//        System.out.println(Thread.currentThread().getName() + " --> 准备发布数据");
+//        Stream<String> stream = IntStream.range(1, 5).mapToObj(WebFluxApplication::test);
+//        System.out.println(Thread.currentThread().getName() + " --> 结束发布数据");
+//        System.out.println(stream.count());
     }
+
+    public static String test(Integer integer) {
+        System.out.println(Thread.currentThread().getName() + " --> 消费内容：" + integer);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "生成：" + integer;
+    }
+
 
 }

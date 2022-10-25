@@ -32,7 +32,8 @@ public class TestController {
     @GetMapping("/test/2")
     public Mono<String> getString2() {
         log.info("start2");
-        // 惰性求值，不会阻塞请求线程
+        // 惰性求值，不会阻塞请求线程，参考jdk8的Stream流不进行终止操作，流中内容是不会执行的
+        // Mono和Flux都是一个Publisher, 使用时不要去调用其subscribe(), 应该交由spring框架去执行终止操作
         Mono<String> result = Mono.fromSupplier(this::buildString);
         log.info("end2");
         return result;
@@ -45,6 +46,7 @@ public class TestController {
      */
     @GetMapping(value = "/test/3", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> getString3() {
+        log.info("start3");
         Flux<String> result = Flux
                 .fromStream(IntStream.range(1, 5).mapToObj(i -> {
                     try {
@@ -52,8 +54,11 @@ public class TestController {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                    // 这是发布者在调用执行，发布者的执行还是当前的请求线程
+                    log.info(Thread.currentThread().getName() + " Flux Data: " + i);
                     return "Flux Data: " + i;
                 }));
+        log.info("end3");
         return result;
     }
 
@@ -64,7 +69,7 @@ public class TestController {
             throw new RuntimeException(e);
         }
 
-        // ??? 为什么执行者还是请求的线程，不是其他线程，如何达到非阻塞效果的
+        // 这是发布者在调用执行，发布者的执行还是当前的请求线程
         log.info(Thread.currentThread().getName() + " : build String");
         return "test string";
     }
