@@ -17,11 +17,15 @@ public class UserApiController {
 
     @GetMapping
     public void test() {
-        userApi.createUser(Mono.just(User.builder().name("test").age(18).build()));
-        userApi.getAllUser();
-        userApi.deleteUser("1");
-//        Flux<User> users = userApi.getAllUser();
-//        users.subscribe(System.out::println);
+        userApi.createUser(Mono.just(User.builder().name("test").age(18).build()))
+                .subscribe(System.out::println, e -> System.err.println("操作异常：" + e.getMessage()));
+
+        Flux<User> users = userApi.getAllUser();
+        users.subscribe(System.out::println, e -> System.err.println("操作异常：" + e.getMessage()));
+
+        userApi.deleteUser("123").subscribe(u -> {}, e -> {
+            System.err.println("操作异常：" + e.getMessage());
+        });
     }
 
 }

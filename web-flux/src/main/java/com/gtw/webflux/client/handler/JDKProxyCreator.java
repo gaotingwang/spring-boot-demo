@@ -7,13 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,10 +88,24 @@ public class JDKProxyCreator implements ProxyCreator{
                 RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
                 if(requestBody != null) {
                     methodInfo.setBody((Mono<?>) args[i]);
+                    Type[] types = ((ParameterizedType)parameters[i].getParameterizedType()).getActualTypeArguments();
+                    Class<?> elementType = (Class<?>) types[0];
+                    methodInfo.setBodyElementType(elementType);
                 }
             }
             methodInfo.setParams(params);
         }
+
+        // 获取返回信息
+        methodInfo.setFluxFlag(method.getReturnType().isAssignableFrom(Flux.class));
+        Type[] types = ((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments();
+        try {
+            Class<?> elementType = (Class<?>) types[0];
+            methodInfo.setReturnElementType(elementType);
+        }catch (ClassCastException e) {
+            methodInfo.setReturnElementType(Void.class);
+        }
+
         return methodInfo;
     }
 

@@ -162,6 +162,8 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
 
 响应式在网页请求下，看到差别并不是很大，它更多适用于服务器之间的Rest调用，异步非阻塞特性才能更好的呈现出来，更有价值。
 
+服务之间的Rest调用参考：[IUserApi](https://github.com/gaotingwang/spring-boot-demo/blob/master/web-flux/src/main/java/com/gtw/webflux/client/IUserApi.java)
+
 ## 热部署
 
 仅需要添加devtools依赖：

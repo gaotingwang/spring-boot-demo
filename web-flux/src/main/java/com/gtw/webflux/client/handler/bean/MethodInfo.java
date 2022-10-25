@@ -18,4 +18,7 @@ public class MethodInfo {
     private HttpMethod method;
     private Map<String, Object> params;
     private Mono<?> body;
+    private Class<?> bodyElementType;
+    private boolean fluxFlag;
+    private Class<?> returnElementType;
 }

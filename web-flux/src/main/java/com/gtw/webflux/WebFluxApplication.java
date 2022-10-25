@@ -59,10 +59,24 @@ public class WebFluxApplication {
 //        System.out.println(Thread.currentThread().getName() + " --> 准备发布数据");
 //        Flux.fromArray(strs)
 //                // 中间操作，这里就是jdk8的stream
-//                .parallel()
+////                .parallel()
 //                .map(Integer::parseInt)
-//                // 终止操作，这里是jdk9的reactive stream
-//                .subscribe(subscriber);
+//                // 终止操作，这里类似jdk9的reactive stream
+////                .subscribe(subscriber);
+//                .subscribe(i -> {
+//                    System.out.println(Thread.currentThread().getName() + " --> 消费内容：" + i);
+//                    try {
+//                        Thread.sleep(3000);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+////                    subscription.request(1L);
+//                }, e -> System.err.println(e.getMessage()), () -> {
+//                    System.out.println(Thread.currentThread().getName() + " --> 消费完成：");
+//                }, subscription -> {
+//                    subscription.request(1);
+//                    System.out.println(Thread.currentThread().getName() + " --> " );
+//                });
 //        System.out.println(Thread.currentThread().getName() + " --> 发布完毕");
 
         SpringApplication.run(WebFluxApplication.class, args);
