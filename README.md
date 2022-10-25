@@ -75,17 +75,17 @@
   ```java
   @ControllerAdvice
   public class GlobalExceptionHandler {
-
+  
       public static final String DEFAULT_ERROR_VIEW = "error/500";
-
+  
       @ExceptionHandler(value = RuntimeException.class)// 用来定义函数针对的异常类型
       public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
           ModelAndView mav = new ModelAndView();
-
+  
           mav.addObject("url", req.getRequestURL());
           mav.addObject("exception", e);
           mav.setViewName(DEFAULT_ERROR_VIEW);// 将Exception对象和请求URL映射到error.html中
-
+  
           return mav;
       }
   }
@@ -111,7 +111,7 @@ Reactive Programming 作为观察者（Observer）的延伸，不同于传统的
 
 webFlux支持通过Controller方式来进行调用，也可以通过Router方式进行调用：
 
-- [RestController方式](https://github.com/gaotingwang/spring-boot-demo/tree/master/web-flux/src/main/java/com/gtw/webflux/controller)
+- [Annotated Controller 注解驱动](https://github.com/gaotingwang/spring-boot-demo/tree/master/web-flux/src/main/java/com/gtw/webflux/controller)
 
   `TestController`中，举例说明了通过servlet的阻塞I/O 和 reactive stream非阻塞的差别，可以提高吞吐量（但并不能解决性能问题），以及`Mono` 和 `Flux`的区别。`UserController`列举了Flux的常规用法。
 
@@ -228,8 +228,29 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
 ## Event
 
 - 事件驱动模型也就是我们常说的观察者，或者发布-订阅模型。
-
 - 事件驱动首先是一种对象间的一对多的关系，当目标发生改变（发布），观察者（订阅者）就可以接收到改变，观察者如何处理（如行人如何走，是快走/慢走/不走，目标红绿灯不会管的），目标无需干涉，所以就松散耦合了它们之间的关系。
+
+Spring 事件 - 监听器（同步/异步）：
+
+- 事件：
+  - 普通应用事件：`ApplicationEvent`
+  - 应用上下文事件：`ApplicationContextEvent`
+- 事件监听器：
+  - 接口编程模：`ApplicationListener`
+  - 注解编程模型：`@EventListener`
+- 事件发布器：`ApplicationEventPublisher`
+- 事件广播器：
+  - 接口：`ApplicationEventMulticaster`
+  - 实现类：`SimpleApplicationEventMulticaster`
+    - 执行模式：同步或异步
+
+事件发布，实际是调用`AbstractApplicationContext.publishEvent(event)`，其内部调用了`AbstractApplicationEventMulticaster`获取对应的Listener（如果Listener是`SmartApplicationListener`类型，对应的Listener的获取是根据`EventType`和`sourceType`去决定的），由相应的Listener执行`onApplicationEvent(event)`。
+
+Spring自己是支持异步方式处理事件（通过新的线程方式）通过，`@Async` `@EventListener`
+
+想采用其他方式的异步响应处理，如MQ方式，可以实现`ApplicationListener`，实现`onApplicationEvent(event)`方法，该方法判断是否开启异步enableAsync()，来采用自定义异步执行器public MQ asyncExecutor()。
+
+使用Spring event步骤：
 
 1. [定义需要监听的事件](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/model/RegisterEvent.java)
 
@@ -241,7 +262,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
 
    - [使用注解@EventListener](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/listener/IndexRegisterListener.java)
 
-3. [执行事件](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/service/PublishRegister.java)
+3. [发布事件](https://github.com/gaotingwang/spring-boot-demo/blob/master/event/src/main/java/com/gtw/event/service/PublishRegister.java)
 
 ## Retry
 
@@ -389,7 +410,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
     */
    @Configuration
    public class DataSourceConfig {
-
+   
        /**
         * 主数据源
         */
@@ -400,7 +421,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
        public DataSource masterDataSource() {
            return DataSourceBuilder.create().build();
        }
-
+   
        /**
         * 从数据源
         */
@@ -411,7 +432,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
            return DataSourceBuilder.create().build();
        }
    }
-
+   
    /**
     * 主数据源详情配置
     */
@@ -419,7 +440,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
    // 制定分库的mapper文件地址，以及分库到层代码
    @MapperScan(basePackages = "com.gtw.mybatis.repository.mapper.master", sqlSessionTemplateRef = "masterSqlSessionTemplate")
    public class MasterDataSourceConfig {
-
+   
        /**
         * 创建SqlSessionFactory
         */
@@ -432,7 +453,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
    //                .getResources("classpath*:mapper/master/*.xml"));
            return sessionFactoryBean.getObject();
        }
-
+   
        /**
         * 创建事务管理
         */
@@ -441,7 +462,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
        public DataSourceTransactionManager transactionManager(@Qualifier("masterDataSource") DataSource dataSource) {
            return new DataSourceTransactionManager(dataSource);
        }
-
+   
        /**
         * 将SqlSessionFactory包装到SqlSessionTemplate中
         */
@@ -450,7 +471,7 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
        public SqlSessionTemplate sqlSessionTemplate(@Qualifier("masterSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
            return new SqlSessionTemplate(sqlSessionFactory);
        }
-
+   
    }
    ```
    此种方式指明哪个包下dao接口或配置文件走哪个数据库，缺点很明显，相同的dao接口和配置文件要复制多份到不同包路径下，不易维护和扩展。

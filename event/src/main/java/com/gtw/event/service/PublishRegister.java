@@ -11,7 +11,7 @@ public class PublishRegister {
     @Autowired
     private ApplicationEventPublisher publisher;
     /**
-     * ③事件执行
+     * ③事件发布
      */
     public void publishRegisterEvent(User user) {
         publisher.publishEvent(new RegisterEvent(user));
