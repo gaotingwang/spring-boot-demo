@@ -15,7 +15,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 /**
- * 审批处理 websocket
+ * websocket
  * @author Tingwang.Gao
  */
 @Slf4j
@@ -48,7 +48,6 @@ public class WsServerEndpoint implements IWebSocketService {
         this.session = session;
         this.username = username;
         WsClientsManager.registerClient(username, this);
-        // todo 红点数量
         int count = testService.getCount();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);

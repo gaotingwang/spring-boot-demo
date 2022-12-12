@@ -193,11 +193,11 @@ public class WebSocketConfiguration {
 
 ### 端点服务类
 
-使用 `@ServerEndpoint` 定义一个端点服务类，在端点服务类中，可以定义 WebSocket 的打开`@OnOpen`、关闭`@OnClose`、错误`@OnError`和接收客户端消息`@OnMessage`的方法，具体参考：`WsServerEndpoint`
+使用 `@ServerEndpoint` 定义一个端点服务类，在端点服务类中，可以定义 WebSocket 的打开`@OnOpen`、关闭`@OnClose`、错误`@OnError`和接收客户端消息`@OnMessage`的方法，具体参考：[WsServerEndpoint ](https://github.com/gaotingwang/spring-boot-demo/blob/master/websocket/src/main/java/com/gtw/websocket/websocket/WsServerEndpoint.java)
 
 ### 向具体客户端推送消息
 
-不同客户端访问时，会为每个客户端生成自己的端点实例，所以要想为每个客户端推送不同的消息，需要记录下每个客户端对应的端点实例，参考`WsClientsManager`。之后，根据不同客户端获取到对应实例中的`session`来进行sendMsg。
+不同客户端访问时，会为每个客户端生成自己的端点实例，所以要想为每个客户端推送不同的消息，需要记录下每个客户端对应的端点实例，参考[WsClientsManager](https://github.com/gaotingwang/spring-boot-demo/blob/master/websocket/src/main/java/com/gtw/websocket/websocket/WsClientsManager.java)。之后，根据不同客户端获取到对应实例中的`session`来进行sendMsg。
 
 ### 依赖容器对象
 
