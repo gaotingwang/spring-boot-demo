@@ -164,6 +164,45 @@ webFlux支持通过Controller方式来进行调用，也可以通过Router方式
 
 服务之间的Rest调用参考：[IUserApi](https://github.com/gaotingwang/spring-boot-demo/blob/master/web-flux/src/main/java/com/gtw/webflux/client/IUserApi.java)
 
+## WebSocket
+
+在 `pom.xml` 加入如下依赖集成 WebSocket：
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
+```
+
+### 开启配置
+
+创建一个 WebSocket 配置类 `WebSocketConfiguration`，在配置类上加入注解 `@EnableWebSocket`，表明开启 WebSocket，内部实例化 ServerEndpointExporter 的 Bean，该 Bean 会自动注册 `@ServerEndpoint` 注解声明的端点，代码如下：
+
+```java
+@Configuration
+@EnableWebSocket
+public class WebSocketConfiguration {
+
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
+    }
+}
+```
+
+### 端点服务类
+
+使用 `@ServerEndpoint` 定义一个端点服务类，在端点服务类中，可以定义 WebSocket 的打开`@OnOpen`、关闭`@OnClose`、错误`@OnError`和接收客户端消息`@OnMessage`的方法，具体参考：`WsServerEndpoint`
+
+### 向具体客户端推送消息
+
+不同客户端访问时，会为每个客户端生成自己的端点实例，所以要想为每个客户端推送不同的消息，需要记录下每个客户端对应的端点实例，参考`WsClientsManager`。之后，根据不同客户端获取到对应实例中的`session`来进行sendMsg。
+
+### 依赖容器对象
+
+因为Spring容器中的对象采用单实例方式，不同客户端连接时会生成不同的WebSocket对象，无法按照对象方式来直接使用容器对象，可以把容器对象定义为WebSocket的类属性。在容器启动时，注册类属性，其后生成的对象都可以使用容器对象。
+
 ## 热部署
 
 仅需要添加devtools依赖：

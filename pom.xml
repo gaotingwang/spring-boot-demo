@@ -38,6 +38,7 @@
         <module>mq-rabbitMQ</module>
         <module>data-elasticsearch</module>
         <module>web-flux</module>
+        <module>websocket</module>
     </modules>
 
     <dependencies>
