@@ -3,6 +3,10 @@
 #    url: jdbc:mysql://localhost:3306/msg?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
 #    username: root
 #    password: root
+#    type: com.zaxxer.hikari.HikariDataSource
+#    driver-class-name: com.p6spy.engine.spy.P6SpyDriver # P6SpyDriver 驱动可以配合spy.properties 进行sql打印
+#    connection-test-query: SELECT 1
+#    pool-name: dr-pool
 #    tomcat:
 #          validation-query: "select 1"
 #          test-on-borrow: true
