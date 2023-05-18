@@ -1,0 +1,14 @@
+
+mqtt:
+  host: tcp://10.200.4.26
+  username: admin
+  password: public
+  clean-session: true
+  # clientId 必须要唯一，否则会连接失败
+  pub-client-id: mqtt_pub_test
+  sub-client-id: mqtt_sub_test
+  timeout: 1000
+  keepalive: 10
+  connectionTimeout: 3000
+  topics: aaatopic/#
+

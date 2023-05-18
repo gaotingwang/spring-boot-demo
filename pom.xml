@@ -39,6 +39,7 @@
         <module>data-elasticsearch</module>
         <module>web-flux</module>
         <module>websocket</module>
+        <module>mq-mqtt</module>
     </modules>
 
     <dependencies>
